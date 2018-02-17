@@ -20,6 +20,7 @@ import requests
 import sys
 import os
 import ntpath
+from tqdm import tqdm
 
 
 urls_file = 'urls.txt'
@@ -48,8 +49,10 @@ if os.path.exists(urls_file):
                 # stream is true, for big files, from here:
                 # http://masnun.com/2016/09/18/python-using-the-requests-module-to-download-large-files-efficiently.html
                 response = requests.get(url, stream=True)
+                # total size of a file in bytes
+                total_size = (int(response.headers.get('content-length', 0)) / (1024 * 1024))
                 handle = open(target_path, "wb")
-                for chunk in response.iter_content(chunk_size=4096):
+                for chunk in tqdm((response.iter_content(1024*1024)), total=total_size, unit='M'):
                     if chunk:  # filter out keep-alive new chunks
                         handle.write(chunk)
             except IOError as e:
