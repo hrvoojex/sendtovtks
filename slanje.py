@@ -64,7 +64,7 @@ def download_file(url):
     f.close()
     end = time.time()
     duration = end - start
-    print(" Finished. Time: {:.2f}s, Speed: {:.2f}MB/s".format(duration, file_size/duration))
+    print(" 100% | {:.2f}s | {:.2f}MB/s, done.".format(duration, file_size/duration))
     return
 
 if os.path.exists(urls_file):
