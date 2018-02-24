@@ -14,7 +14,11 @@ Send files over ftp from workshops to headquarter.
 import datetime
 import ftplib
 import sys
+import os
 
+
+# Remove those two log files if they exist
+[os.remove(log_file) for log_file in ['OK.log', 'error.log'] if os.path.exists(log_file)]
 
 # FTP server login data
 ftpserver_ip = '192.168.0.100'
