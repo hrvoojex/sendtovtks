@@ -21,9 +21,9 @@ import os
 [os.remove(log_file) for log_file in ['OK.log', 'error.log'] if os.path.exists(log_file)]
 
 # FTP server login data
-ftpserver_ip = '192.168.0.100'
-username = 'user'
-password = 'pass'
+ftpserver_ip = '192.168.0.232'
+username = 'borovo'
+password = 'borovo'
 
 # If there is command line argument, the first one is our file to upload
 if len(sys.argv) > 1:
@@ -51,7 +51,7 @@ def ftpsend():
     with open('OK.log', 'w') as fok:
         fok.write(str(datetime.datetime.now()))
         fok.write(" OK")
-        print(datetime.datetime.now(), "OK")
+        print(str(datetime.datetime.now()), "OK")
 
 ftpsend()
 
