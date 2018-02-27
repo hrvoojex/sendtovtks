@@ -17,6 +17,12 @@ import sys
 import os
 
 
+# Init
+ftpserver_ip = '192.168.0.232'
+username = 'ftp_test'
+password = 'ftp_test'
+
+
 class FtpUploadTrack(object):
     """Class for tracking file upload"""
     size_written = 0
@@ -27,7 +33,7 @@ class FtpUploadTrack(object):
         self.total_size = total_size
 
     def handler(self, chunk):
-        self.size_written += 1024
+        self.size_written += len(chunk)
         percente_complete = round((self.size_written / self.total_size) * 100)
 
         if self.last_shown_percent != percente_complete:
@@ -39,28 +45,24 @@ class FtpUploadTrack(object):
             sys.stdout.flush()
 
 
-# Remove those two log files if they exist
-[os.remove(log_file) for log_file in ['OK.log', 'error.log'] if os.path.exists(log_file)]
-
-# FTP server login data
-ftpserver_ip = '192.168.0.232'
-username = 'ftp_test'
-password = 'ftp_test'
-
-# If there is command line argument, the first one is our file to upload
-if len(sys.argv) > 1:
-    upload_file = sys.argv[1]
-else:
-    print('No input file')
-    sys.exit()
-
-# Find out total file size and create instance of FtpUploadTrack
-total_size = os.path.getsize(upload_file)
-print("File size: {}MB".format(str(round(total_size / 1024 / 1024, 1))))
-uploadTrack = FtpUploadTrack(int(total_size))
-
 def ftpsend():
+
+    # Remove those two log files if they exist
+    [os.remove(log_file) for log_file in ['OK.log', 'error.log'] if os.path.exists(log_file)]
+
+    # If there is command line argument, the first one is our file to upload
+    if len(sys.argv) > 1:
+        upload_file = sys.argv[1]
+    else:
+        print('No input file')
+        sys.exit()
+
     try:
+        # Find out total file size and create instance of FtpUploadTrack
+        total_size = os.path.getsize(upload_file)
+        print("File size: {}MB".format(str(round(total_size / 1024 / 1024, 1))))
+        uploadTrack = FtpUploadTrack(int(total_size))
+
         # ftp server running on 'ftpserver_ip' on port 21
         session = ftplib.FTP(ftpserver_ip, username, password)
         file = open(upload_file, 'rb')
